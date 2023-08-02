@@ -20,13 +20,13 @@ function pegarValores(dadosUsuario) {
 	dadosUsuario.nome = document.getElementById("nome").value.trim();
 	dadosUsuario.dia = parseInt(document.getElementById("dia-nascimento").value.trim());
 	if (isNaN(dadosUsuario.dia))
-		console.log("O dia não foi imformado corretamente.");
+		console.log("O dia não foi informado corretamente.");
 	dadosUsuario.mes = parseInt(document.getElementById("mes-nascimento").value.trim());
 	if (isNaN(dadosUsuario.mes))
-		console.log("O mês não foi imformado corretamente.");
+		console.log("O mês não foi informado corretamente.");
 	dadosUsuario.ano = parseInt(document.getElementById("ano-nascimento").value.trim());
 	if (isNaN(dadosUsuario.ano))
-		console.log("O ano não foi imformado corretamente.");	
+		console.log("O ano não foi informado corretamente.");	
 }
 
 function calcularIdade(dadosUsuario) {
@@ -62,7 +62,7 @@ function classificarFaixaEtaria(idade) {
 	if (idade <= 99)
 		return ("Idoso.")
 	if (idade > 100)
-		return ("Tá fazendo hora extra.")
+		return ("Nosferatu.")
 }
 
 function cadastrarUsuario(dadosUsuario) {
@@ -81,7 +81,7 @@ function mostrarTabela(usuariosCadastrados) {
 	let template = '';
 
 	usuariosCadastrados.forEach(item => {
-		//espaços no data-cell??????
+		//data cell: usado no responsivo quando a tabela encolhe
 		template += `<tr>
 						<td data-cell="nome">${item.nome}</td>
 						<td data-cell="data de nascimento">${item.dia + '/' + item.mes + '/' + 
@@ -93,7 +93,7 @@ function mostrarTabela(usuariosCadastrados) {
 	tabela.innerHTML = template;
 }
 
-function carregarUsuarios(params) {
+function carregarUsuarios() {
 	let listaUsuarios = [];
 	let tabela = ''
 
@@ -102,12 +102,11 @@ function carregarUsuarios(params) {
 		if (listaUsuarios.length == 0) {
 			tabela = document.getElementById("corpo-tabela")
 			tabela.innerHTML = `<tr class="linha-mensagem">
-			<td colspan="6">Nenhum usuario cadastrado!</td>
-			</tr>`
+									<td colspan="6">Nenhum usuario cadastrado!</td>
+								</tr>`
 		}
-		else {
+	else
 		mostrarTabela(listaUsuarios);
-	}
 }
 
 window.addEventListener('DOMContentLoaded', () => carregarUsuarios());
