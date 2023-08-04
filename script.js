@@ -30,18 +30,30 @@ function inputMinMax(dataAtual) {
 }
 
 function validacaoData(usuario, dataAtual) {
-	if (usuario.ano == dataAtual.ano) {
-		if (usuario.mes == dataAtual.mes) {
-			if (usuario.dia > dataAtual.dia) {
+	let p = ''
+
+	if (usuario.dia && usuario.mes && usuario.ano) {
+		p = document.getElementById("p-erro");
+		console.log(usuario.ano, dataAtual.ano);
+		if (usuario.ano == dataAtual.ano) {
+			if (usuario.mes == dataAtual.mes) {
+				if (usuario.dia > dataAtual.dia) {
+					p.style = "color: #FD3B3B; font-size: 15px";
+					console.log("A data informada não pode estar no futuro.");
+					return (false);
+				}
+			}
+			if (usuario.mes > dataAtual.mes) {
+				p.style = "color: #FD3B3B; font-size: 15px";
 				console.log("A data informada não pode estar no futuro.");
-				return (-1);
+				return (false);	
 			}
 		}
-		if (usuario.mes > dataAtual.mes) {
-			console.log("A data informada não pode estar no futuro.");
-			return (-1);	
-		}
+		p.style = "display: none";
+		return (true)
 	}
+	else
+		return (false)
 }
 
 function calculadoraDeIdade(event) {
@@ -56,7 +68,7 @@ function calculadoraDeIdade(event) {
 	event.preventDefault();
 	let dataAtual = gerarDadaAtual();
 	pegarValores(dadosUsuario, dataAtual);
-	if (validacaoData(dadosUsuario, dataAtual) == -1)
+	if (!validacaoData(dadosUsuario, dataAtual))
 		return (-1)
 	if (isNaN(dadosUsuario.dia) || isNaN(dadosUsuario.mes) || isNaN(dadosUsuario.ano))
 		return (-1)
