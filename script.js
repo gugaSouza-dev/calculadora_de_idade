@@ -13,12 +13,12 @@ function gerarDadaAtual() {
 	return (dataAtual)
 }
 
+//TRATAMENTO DE INPUTS
 function inputMinMax(dataAtual) {
 	let input = ''
 
 	input = document.getElementById("ano-nascimento");
 	input.setAttribute("max", dataAtual.ano)
-	input.setAttribute("min", 1)
 
 	input = document.getElementById("mes-nascimento");
 	input.setAttribute("max", 12)
@@ -56,6 +56,21 @@ function validacaoData(usuario, dataAtual) {
 		return (false)
 }
 
+function pegarValores(dadosUsuario, dataAtual) {
+	inputMinMax(dataAtual)
+	dadosUsuario.nome = document.getElementById("nome").value.trim();
+	dadosUsuario.dia = parseInt(document.getElementById("dia-nascimento").value.trim());
+	if (isNaN(dadosUsuario.dia))
+		console.log("O dia não foi informado corretamente.");
+	dadosUsuario.mes = parseInt(document.getElementById("mes-nascimento").value.trim());
+	if (isNaN(dadosUsuario.mes))
+		console.log("O mês não foi informado corretamente.");
+	dadosUsuario.ano = parseInt(document.getElementById("ano-nascimento").value.trim());
+	if (isNaN(dadosUsuario.ano))
+		console.log("O ano não foi informado corretamente.");
+}
+
+//MAIN
 function calculadoraDeIdade(event) {
 	let dadosUsuario = {
 		nome: '',
@@ -78,29 +93,17 @@ function calculadoraDeIdade(event) {
 	window.location.reload();
 }
 
-function pegarValores(dadosUsuario, dataAtual) {
-	inputMinMax(dataAtual)
-	dadosUsuario.nome = document.getElementById("nome").value.trim();
-	dadosUsuario.dia = parseInt(document.getElementById("dia-nascimento").value.trim());
-	if (isNaN(dadosUsuario.dia))
-		console.log("O dia não foi informado corretamente.");
-	dadosUsuario.mes = parseInt(document.getElementById("mes-nascimento").value.trim());
-	if (isNaN(dadosUsuario.mes))
-		console.log("O mês não foi informado corretamente.");
-	dadosUsuario.ano = parseInt(document.getElementById("ano-nascimento").value.trim());
-	if (isNaN(dadosUsuario.ano))
-		console.log("O ano não foi informado corretamente.");
-}
-
 function calcularIdade(dadosUsuario) {
 	let dataAtual = gerarDadaAtual();
-
+	let idade = 0;
 	// console.log(anoAtual, mesAtual, diaAtual);
 	// const anoAtual = new Date().getFullYear();
 	// const mesAtual = new Date().getMonth();
 	// const diaAtual = new Date().getDay();
 
-	let idade = dataAtual.ano - dadosUsuario.ano;
+	if (dadosUsuario.ano < 0)
+		idade += (dadosUsuario.ano * -1)
+	idade += dataAtual.ano - dadosUsuario.ano;
 	if (dataAtual.mes < dadosUsuario.mes)
 		idade -= 1;
 	else if (dataAtual.mes == dadosUsuario.mes){
@@ -134,19 +137,31 @@ function cadastrarUsuario(dadosUsuario) {
 	localStorage.setItem("usuariosCadastrados", JSON.stringify(listaUsuarios))
 }
 
+//RENDERIZAÇÃO NA TELA
 function mostrarTabela(usuariosCadastrados) {
 	let tabela = document.getElementById("corpo-tabela");
 	let template = '';
 
 	usuariosCadastrados.forEach(item => {
 		//data cell: usado no responsivo quando a tabela encolhe
-		template += `<tr>
-						<td data-cell="nome">${item.nome}</td>
-						<td data-cell="data de nascimento">${item.dia + '/' + item.mes + '/' + 
-															item.ano}</td>
-						<td data-cell="idade">${item.idade}</td>
-						<td data-cell="faixa etária">${item.faixaEtaria}</td>
-					</tr>`
+		if (item.ano > -1) {
+			template += `<tr>
+							<td data-cell="nome">${item.nome}</td>
+							<td data-cell="data de nascimento">${item.dia + '/' + item.mes + '/' + 
+																item.ano}</td>
+							<td data-cell="idade">${item.idade}</td>
+							<td data-cell="faixa etária">${item.faixaEtaria}</td>
+						</tr>`
+		}
+		else{
+			template += `<tr>
+							<td data-cell="nome">${item.nome}</td>
+							<td data-cell="data de nascimento">${item.dia + '/' + item.mes + '/' + 
+																(item.ano * -1) + " B.C."}</td>
+							<td data-cell="idade">${item.idade}</td>
+							<td data-cell="faixa etária">${item.faixaEtaria}</td>
+						</tr>`
+		}
 	});
 	tabela.innerHTML = template;
 }
